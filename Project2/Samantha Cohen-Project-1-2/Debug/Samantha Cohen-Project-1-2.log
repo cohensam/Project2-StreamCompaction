@@ -1,0 +1,33 @@
+﻿Build started 9/26/2014 10:25:38 PM.
+     1>Project "C:\Users\Samantha\Documents\GitHub\Project2-StreamCompaction\Project2\Samantha Cohen-Project-1-2\Samantha Cohen-Project-1-2.vcxproj" on node 2 (build target(s)).
+     1>InitializeBuildStatus:
+         Creating "Debug\Samantha Cohen-Project-1-2.unsuccessfulbuild" because "AlwaysCreate" was specified.
+       AddCudaCompileDeps:
+       Skipping target "AddCudaCompileDeps" because all output files are up-to-date with respect to the input files.
+       AddCudaCompilePropsDeps:
+       Skipping target "AddCudaCompilePropsDeps" because all output files are up-to-date with respect to the input files.
+       CudaBuild:
+       Skipping target "CudaBuild" because all output files are up-to-date with respect to the input files.
+       ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v6.5\include" /ZI /nologo /W3 /WX- /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt CPU_stream_compaction.cpp main.cpp
+         main.cpp
+     1>c:\users\samantha\documents\github\project2-streamcompaction\project2\samantha cohen-project-1-2\main.cpp(2): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+         CPU_stream_compaction.cpp
+     1>c:\users\samantha\documents\github\project2-streamcompaction\project2\samantha cohen-project-1-2\cpu_stream_compaction.cpp(2): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+         Generating Code...
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Samantha\Documents\GitHub\Project2-StreamCompaction\Project2\Debug\Samantha Cohen-Project-1-2.exe" /NOLOGO /LIBPATH:"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v6.5\lib\Win32" cudart.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /ManifestFile:"Debug\Samantha Cohen-Project-1-2.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"C:\Users\Samantha\Documents\GitHub\Project2-StreamCompaction\Project2\Debug\Samantha Cohen-Project-1-2.pdb" /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Samantha\Documents\GitHub\Project2-StreamCompaction\Project2\Debug\Samantha Cohen-Project-1-2.lib" /MACHINE:X86 Debug\stream_compaction.cu.obj
+         Debug\CPU_stream_compaction.obj
+         Debug\main.obj
+         LINK : C:\Users\Samantha\Documents\GitHub\Project2-StreamCompaction\Project2\Debug\Samantha Cohen-Project-1-2.exe not found or not built by the last incremental link; performing full link
+         Samantha Cohen-Project-1-2.vcxproj -> C:\Users\Samantha\Documents\GitHub\Project2-StreamCompaction\Project2\Debug\Samantha Cohen-Project-1-2.exe
+       Manifest:
+         C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin\mt.exe /nologo /verbose /outputresource:"C:\Users\Samantha\Documents\GitHub\Project2-StreamCompaction\Project2\Debug\Samantha Cohen-Project-1-2.exe;#1" /manifest "Debug\Samantha Cohen-Project-1-2.exe.intermediate.manifest"
+       FinalizeBuildStatus:
+         Deleting file "Debug\Samantha Cohen-Project-1-2.unsuccessfulbuild".
+         Touching "Debug\Samantha Cohen-Project-1-2.lastbuildstate".
+     1>Done Building Project "C:\Users\Samantha\Documents\GitHub\Project2-StreamCompaction\Project2\Samantha Cohen-Project-1-2\Samantha Cohen-Project-1-2.vcxproj" (build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:00.86
