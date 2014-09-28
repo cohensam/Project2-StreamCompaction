@@ -1,20 +1,44 @@
-﻿Build started 9/26/2014 10:25:38 PM.
+﻿Build started 9/27/2014 8:32:31 PM.
      1>Project "C:\Users\Samantha\Documents\GitHub\Project2-StreamCompaction\Project2\Samantha Cohen-Project-1-2\Samantha Cohen-Project-1-2.vcxproj" on node 2 (build target(s)).
      1>InitializeBuildStatus:
          Creating "Debug\Samantha Cohen-Project-1-2.unsuccessfulbuild" because "AlwaysCreate" was specified.
        AddCudaCompileDeps:
-       Skipping target "AddCudaCompileDeps" because all output files are up-to-date with respect to the input files.
+         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\cl.exe /E /nologo /showIncludes /TP /D__CUDACC__ /D_MBCS /I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v6.5\include" /I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v6.5\bin" /I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v6.5\include" /I. /FIcuda_runtime.h /c "C:\Users\Samantha\Documents\GitHub\Project2-StreamCompaction\Project2\Samantha Cohen-Project-1-2\stream_compaction.cu" 
        AddCudaCompilePropsDeps:
        Skipping target "AddCudaCompilePropsDeps" because all output files are up-to-date with respect to the input files.
        CudaBuild:
-       Skipping target "CudaBuild" because all output files are up-to-date with respect to the input files.
+         Compiling CUDA source file stream_compaction.cu...
+         cmd.exe /C "C:\Users\Samantha\AppData\Local\Temp\tmp166a691561c7411f835efa3b03257504.cmd"
+         "C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v6.5\bin\nvcc.exe" -gencode=arch=compute_20,code=\"sm_20,compute_20\" --use-local-env --cl-version 2010 -ccbin "C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin"  -I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v6.5\include" -I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v6.5\include"  -G   --keep-dir Debug -maxrregcount=0  --machine 32 --compile -cudart static  -g   -D_MBCS -Xcompiler "/EHsc /W3 /nologo /Od /Zi /RTC1 /MDd  " -o Debug\stream_compaction.cu.obj "C:\Users\Samantha\Documents\GitHub\Project2-StreamCompaction\Project2\Samantha Cohen-Project-1-2\stream_compaction.cu"
+         
+         C:\Users\Samantha\Documents\GitHub\Project2-StreamCompaction\Project2\Samantha Cohen-Project-1-2>"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v6.5\bin\nvcc.exe" -gencode=arch=compute_20,code=\"sm_20,compute_20\" --use-local-env --cl-version 2010 -ccbin "C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin"  -I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v6.5\include" -I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v6.5\include"  -G   --keep-dir Debug -maxrregcount=0  --machine 32 --compile -cudart static  -g   -D_MBCS -Xcompiler "/EHsc /W3 /nologo /Od /Zi /RTC1 /MDd  " -o Debug\stream_compaction.cu.obj "C:\Users\Samantha\Documents\GitHub\Project2-StreamCompaction\Project2\Samantha Cohen-Project-1-2\stream_compaction.cu" 
+     1>C:/Users/Samantha/Documents/GitHub/Project2-StreamCompaction/Project2/Samantha Cohen-Project-1-2/stream_compaction.cu(151): warning : variable "extra_space" was declared but never referenced
+         
+     1>C:/Users/Samantha/Documents/GitHub/Project2-StreamCompaction/Project2/Samantha Cohen-Project-1-2/stream_compaction.cu(175): warning : variable "extra_space" was declared but never referenced
+         
+     1>C:/Users/Samantha/Documents/GitHub/Project2-StreamCompaction/Project2/Samantha Cohen-Project-1-2/stream_compaction.cu(199): warning : variable "extra_space" was declared but never referenced
+         
+     1>C:/Users/Samantha/Documents/GitHub/Project2-StreamCompaction/Project2/Samantha Cohen-Project-1-2/stream_compaction.cu(205): warning : variable "blockNum" was declared but never referenced
+         
+     1>C:/Users/Samantha/Documents/GitHub/Project2-StreamCompaction/Project2/Samantha Cohen-Project-1-2/stream_compaction.cu(282): warning : variable "size" was declared but never referenced
+         
+     1>C:/Users/Samantha/Documents/GitHub/Project2-StreamCompaction/Project2/Samantha Cohen-Project-1-2/stream_compaction.cu(283): warning : variable "numBlocks" was declared but never referenced
+         
+     1>C:/Users/Samantha/Documents/GitHub/Project2-StreamCompaction/Project2/Samantha Cohen-Project-1-2/stream_compaction.cu(151): warning : variable "extra_space" was declared but never referenced
+         
+     1>C:/Users/Samantha/Documents/GitHub/Project2-StreamCompaction/Project2/Samantha Cohen-Project-1-2/stream_compaction.cu(175): warning : variable "extra_space" was declared but never referenced
+         
+     1>C:/Users/Samantha/Documents/GitHub/Project2-StreamCompaction/Project2/Samantha Cohen-Project-1-2/stream_compaction.cu(199): warning : variable "extra_space" was declared but never referenced
+         
+     1>C:/Users/Samantha/Documents/GitHub/Project2-StreamCompaction/Project2/Samantha Cohen-Project-1-2/stream_compaction.cu(205): warning : variable "blockNum" was declared but never referenced
+         
+     1>C:/Users/Samantha/Documents/GitHub/Project2-StreamCompaction/Project2/Samantha Cohen-Project-1-2/stream_compaction.cu(282): warning : variable "size" was declared but never referenced
+         
+     1>C:/Users/Samantha/Documents/GitHub/Project2-StreamCompaction/Project2/Samantha Cohen-Project-1-2/stream_compaction.cu(283): warning : variable "numBlocks" was declared but never referenced
+         
+         stream_compaction.cu
        ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v6.5\include" /ZI /nologo /W3 /WX- /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt CPU_stream_compaction.cpp main.cpp
-         main.cpp
-     1>c:\users\samantha\documents\github\project2-streamcompaction\project2\samantha cohen-project-1-2\main.cpp(2): warning C4067: unexpected tokens following preprocessor directive - expected a newline
-         CPU_stream_compaction.cpp
-     1>c:\users\samantha\documents\github\project2-streamcompaction\project2\samantha cohen-project-1-2\cpu_stream_compaction.cpp(2): warning C4067: unexpected tokens following preprocessor directive - expected a newline
-         Generating Code...
+         All outputs are up-to-date.
        Link:
          C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Samantha\Documents\GitHub\Project2-StreamCompaction\Project2\Debug\Samantha Cohen-Project-1-2.exe" /NOLOGO /LIBPATH:"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v6.5\lib\Win32" cudart.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /ManifestFile:"Debug\Samantha Cohen-Project-1-2.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"C:\Users\Samantha\Documents\GitHub\Project2-StreamCompaction\Project2\Debug\Samantha Cohen-Project-1-2.pdb" /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Samantha\Documents\GitHub\Project2-StreamCompaction\Project2\Debug\Samantha Cohen-Project-1-2.lib" /MACHINE:X86 Debug\stream_compaction.cu.obj
          Debug\CPU_stream_compaction.obj
@@ -30,4 +54,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:00.86
+Time Elapsed 00:00:03.44

@@ -1,240 +1,391 @@
 #include <cuda_runtime.h>
 #include <stdio.h>
+#include "CPU_stream_compaction.h"
 
-void CPU_mat_sub(float* M, float* N, float* P, int width) {
-	for (int i = 0; i < width; i++) {
+/*__global__ void scan_workefficient(float *g_odata, float *g_idata, int n)
+{
+    // Dynamically allocated shared memory for scan kernels
+    extern  __shared__  float temp[];
+
+    int thid = threadIdx.x;
+
+    int offset = 1;
+
+    // Cache the computational window in shared memory
+    temp[2*thid]   = g_idata[2*thid];
+    temp[2*thid+1] = g_idata[2*thid+1];
+
+    // build the sum in place up the tree
+    for (int d = n>>1; d > 0; d >>= 1)
+    {
+        __syncthreads();
+
+        if (thid < d)      
+        {
+            int ai = offset*(2*thid+1)-1;
+            int bi = offset*(2*thid+2)-1;
+
+            temp[bi] += temp[ai];
+        }
+
+        offset *= 2;
+    }
+
+    // scan back down the tree
+
+    // clear the last element
+    if (thid == 0)
+    {
+        temp[n - 1] = 0;
+    }   
+
+    // traverse down the tree building the scan in place
+    for (int d = 1; d < n; d *= 2)
+    {
+        offset >>= 1;
+        __syncthreads();
+
+        if (thid < d)
+        {
+            int ai = offset*(2*thid+1)-1;
+            int bi = offset*(2*thid+2)-1;
+
+            float t   = temp[ai];
+            temp[ai]  = temp[bi];
+            temp[bi] += t;
+        }
+    }
+
+    __syncthreads();
+
+    // write results to global memory
+    g_odata[2*thid]   = temp[2*thid];
+    g_odata[2*thid+1] = temp[2*thid+1];
+}
+
+__global__ void prefix_sum_exclusive_all_lengths_kernel(float *in, float *out, int n)
+{
+    extern __shared__ float temp[];
+    int tx = threadIdx.x;
+    int offset = 1;
+    temp[2*tx]   = in[2*tx];
+    temp[2*tx+1] = in[2*tx+1];
+    for (int i = n>>1; i > 0; i >>= 1) {
+        __syncthreads();
+        if (tx < i) {
+            int ai = offset*(2*tx+1)-1;
+            int bi = offset*(2*tx+2)-1;
+            temp[bi] += temp[ai];
+        }
+        offset *= 2;
+    }
+    if (tx == 0) {
+		temp[n-1] = 0;
+    }   
+    for (int i = 1; i < n; i *= 2) {
+        offset >>= 1;
+        __syncthreads();
+
+        if (tx < i) {
+            int ai = i*(2*tx+1)-1;
+            int bi = i*(2*tx+2)-1;
+
+            float t   = temp[ai];
+            temp[ai]  = temp[bi];
+            temp[bi] += t;
+        }
+    }
+    __syncthreads();
+    out[2*tx]   = temp[2*tx];
+    out[2*tx+1] = temp[2*tx+1];
+}
+*/
+
+__global__ void prefix_sum_exclusive_all_lengths_kernel(float *in, float *out, int n)
+{
+}
+
+__global__ void prefix_sum_exclusive_one_block_kernel(float* in, float* out, int n) {
+	extern __shared__ float temp[]; 
+	int tx = threadIdx.x;  
+	int pout = 0;
+	int pin = 1;
+	if (tx > 0) {
+		temp[pout*n+tx] = in[tx-1];
+	} else {
+		temp[pout*n+tx] = 0; 
+	}
+	for (int i = 1; i < n; i *= 2)  {  
+	  pout = 1 - pout;
+	  pin = 1 - pout;  
+	__syncthreads();  
+		temp[pout*n+tx] = temp[pin*n+tx];
+	  if (tx >= i) { 
+		temp[pout*n+tx] += temp[pin*n+tx-i];  
+	  }
+	}  
+	__syncthreads();  
+	out[tx] = temp[pout*n+tx];
+}
+
+__global__ void prefix_sum_inclusive_one_block_kernel(float* in, float* out, int n) {
+	extern __shared__ float temp[]; 
+	int tx = threadIdx.x;  
+	int pout = 0;
+	int pin = 1;
+	temp[pout*n+tx] = in[tx];
+	for (int i = 1; i < n; i *= 2)  {  
+	  pout = 1 - pout;
+	  pin = 1 - pout;  
+	  __syncthreads();  
+		temp[pout*n+tx] = temp[pin*n+tx];
+	  if (tx >= i) { 
+		temp[pout*n+tx] += temp[pin*n+tx-i];  
+	  }
+	}  
+	__syncthreads();  
+	out[tx] = temp[pout*n+tx];
+} 
+void prefix_sum_exclusive_one_block(float* in1, float* out1, int width) {
+	unsigned int eltNum = 512;
+	int extra_space = 0;
+	const unsigned int threadNum = eltNum / 2;
+	const unsigned int sharedMemorySize = sizeof(float) * eltNum;
+	int size = 1 * width * sizeof(float);
+	float *in;
+	float *out;
+	//Original Array
+	cudaMalloc((void**)&in, size);
+	cudaMemcpy(in,in1,size,cudaMemcpyHostToDevice);
+
+	cudaMalloc((void**)&out, size);
+
+	dim3 dimBlock(threadNum*2, 1, 1);
+	dim3 dimGrid(1, 1, 1);
+
+	prefix_sum_exclusive_one_block_kernel<<<dimGrid, dimBlock, 2 * sharedMemorySize>>>(in, out, eltNum);
+
+	cudaMemcpy(out1, out, size, cudaMemcpyDeviceToHost);
+	cudaFree(in);
+	cudaFree(out);
+}
+
+void prefix_sum_inclusive_one_block(float* in1, float* out1, int width) {
+	unsigned int eltNum = 512;
+	int extra_space = 0;
+	const unsigned int threadNum = eltNum / 2;
+	const unsigned int sharedMemorySize = sizeof(float) * eltNum;
+	int size = 1 * width * sizeof(float);
+	float *in;
+	float *out;
+	//Original Array
+	cudaMalloc((void**)&in, size);
+	cudaMemcpy(in,in1,size,cudaMemcpyHostToDevice);
+
+	cudaMalloc((void**)&out, size);
+
+	dim3 dimBlock(threadNum*2, 1, 1);
+	dim3 dimGrid(1, 1, 1);
+
+	prefix_sum_inclusive_one_block_kernel<<<dimGrid, dimBlock, 2 * sharedMemorySize>>>(in, out, eltNum);
+
+	cudaMemcpy(out1, out, size, cudaMemcpyDeviceToHost);
+	cudaFree(in);
+	cudaFree(out);
+}
+
+void prefix_sum_exclusive_all_lengths(float* in1, float* out1, int width) {
+	unsigned int eltNum = 512;
+	int extra_space = 0;
+	const unsigned int threadNum = eltNum / 2;
+	const unsigned int sharedMemorySize = sizeof(float) * eltNum;
+	int size = 1 * width * sizeof(float);
+	float *in;
+	float *out;
+	int blockNum = width/eltNum;
+	blockNum += 1;
+
+	//Original Array
+	cudaMalloc((void**)&in, size);
+	cudaMemcpy(in,in1,size,cudaMemcpyHostToDevice);
+
+	cudaMalloc((void**)&out, size);
+
+	dim3 dimBlock(threadNum*2, 1, 1);
+	dim3 dimGrid(1, 1, 1);
+
+	//1) Create one float array for every block from the input array
+	vector<float*> v;
+	v.resize(blockNum);
+	for (int i = 0; i < blockNum; i++) {
+		float t[eltNum];
+		int k = 0;
+		for (int j = i*eltNum; j < blockNum*eltNum; j++) {
+			if (j < width) {
+				t[k] = in[j];
+				k++;
+			}
+		}
+		v[i] = t;
+	}
+
+	//2) Perform inclusive prefix sum for all blocks of array values
+	for (int i = 0; i < v.size(); i++) {
+		prefix_sum_inclusive_one_block_kernel<<<dimGrid, dimBlock, 2 * sharedMemorySize>>>(in, out, eltNum); //need to deal with memalloc for arrays and actual array vals
 		for (int j = 0; j < width; j++) {
-			P[i*width+j] = M[i*width+j] - N[i*width+j];
+			v[i] = out[j];
 		}
 	}
-}
-
-void CPU_mat_add(float* M, float* N, float* P, int width) {
-	for (int i = 0; i < width; i++) {
-		for (int j = 0; j < width; j++) {
-			P[i*width+j] = M[i*width+j] + N[i*width+j];
+	//3) Create new array of maxes
+	float* maxes[blockNum];
+	for (int i = 0; i < blockNum; i++) {
+		maxes[i] = v[i][eltNum-1];
+	}
+	//4) Perform exclusive prefix sum on maxes
+	for (int i = 0; i < blockNum; i++) {
+		prefix_sum_exclusive_one_block_kernel<<<dimGrid, dimBlock, 2 * sharedMemorySize>>>(maxes, out, eltNum); //need to deal with memalloc for arrays and actual array vals
+	}
+	//5) Add the associated value, arr[i] to each block, i, of prefix values
+	for (int i = 0; i < blockNum; i++) {
+		for (int j = 0; j < eltNum; j++) {
+			v[i][j] += out[i]; //need to deal with memalloc etc. for arrays
 		}
 	}
-}
-
-void CPU_mat_mult(float* M, float* N, float* P, int width) {
-	P = new float[25];
-	for (int i = 0; i < width; i++) {
-		for (int j = 0; j < width; j++) {
-			P[i*width+j] += M[i*width+j] * N[j*width+i];
+	//6) Combine prefix blocks into 1 array
+	for (int i = 0; i < blockNum; i++) {
+		for (int j = 0; j < eltNum; j++) {
+			out[i*eltNum+j] = v[i][j]; //need to deal with memalloc etc. for arrays
 		}
 	}
+
+	prefix_sum_inclusive_one_block_kernel<<<dimGrid, dimBlock, 2 * sharedMemorySize>>>(in, out, eltNum);
+
+	cudaMemcpy(out1, out, size, cudaMemcpyDeviceToHost);
+	cudaFree(in);
+	cudaFree(out);
 }
+/*void prefix_sum_exclusive_all_lengths(float* in1, float* out1, int width) {
+	unsigned int eltNum = 512;
+	int extra_space = 0;
+	const unsigned int threadNum = eltNum / 4;
+	const unsigned int sharedMemorySize = sizeof(float) * eltNum;
+	int size = 1 * width * sizeof(float);
+	float *in;
+	float *out;
+	//Original Array
+	cudaMalloc((void**)&in, size);
+	cudaMemcpy(in,in1,size,cudaMemcpyHostToDevice);
 
-__global__ void mat_sub_kernel(float* Md, float* Nd, float* Pd, int width) {
-	int tx = threadIdx.x;
-	int ty = threadIdx.y;
+	cudaMalloc((void**)&out, size);
 
-	float Pvalue = Md[ty*width+tx] - Nd[ty*width+tx];
+	dim3 dimBlock(threadNum*2, 1, 1);
+	dim3 dimGrid(2, 2, 1);
 
-	Pd[ty*width+tx] = Pvalue;
+//	prefix_sum_exclusive_all_lengths_kernel<<<dimGrid, dimBlock, 2 * sharedMemorySize>>>(in, out, eltNum);
+	scan_workefficient<<<dimGrid, dimBlock, 2 * sharedMemorySize>>>(out, in, eltNum);
+
+	cudaMemcpy(out1, out, size, cudaMemcpyDeviceToHost);
+	cudaFree(in);
+	cudaFree(out);
 }
+*/
 
-void mat_sub(float* M, float* N, float* P, int width) {
-	int size = width * width * sizeof(float);
-	float *Md;
-	float *Nd;
-	float *Pd;
-	//Matrix 1
-	cudaMalloc((void**)&Md, size);
-	cudaMemcpy(Md,M,size,cudaMemcpyHostToDevice);
-	//Matrix 2
-	cudaMalloc((void**)&Nd, size);
-	cudaMemcpy(Nd,N,size,cudaMemcpyHostToDevice);
+int main () {
+	//Part 1
+	printf("Part 1");
+	CPU_stream_compaction sc;
+	float arr[6];
+	arr[0] = 3.0f;
+	arr[1] = 4.0f;
+	arr[2] = 6.0f;
+	arr[3] = 7.0f;
+	arr[4] = 9.0f;
+	arr[5] = 10.0f;
+	float* in = sc.CPU_prefix_sum_inclusive(arr, 6);
+	printf("Prefix Sum Inclusive:\n");
+	printf("Input Array: \n["); printf("%f ",arr[0]); printf("%f ",arr[1]); printf("%f ",arr[2]); printf("%f ",arr[3]);
+	printf("%f ",arr[4]); printf("%f ",arr[5]); printf("]\n");
+	printf("Output Array: \n["); printf("%f ",in[0]); printf("%f ",in[1]); printf("%f ",in[2]); printf("%f ",in[3]);
+	printf("%f ",in[4]); printf("%f ",in[5]); printf("]\n");
 
-	cudaMalloc((void**)&Pd, size);
+	float* ex = sc.CPU_prefix_sum_exclusive(arr, 6);
+	printf("Prefix Sum Inclusive:\n");
+	printf("Input Array: \n["); printf("%f ",arr[0]); printf("%f ",arr[1]); printf("%f ",arr[2]); printf("%f ",arr[3]);
+	printf("%f ",arr[4]); printf("%f ",arr[5]); printf("]\n");
+	printf("Output Array: \n["); printf("%f ",ex[0]); printf("%f ",ex[1]); printf("%f ",ex[2]); printf("%f ",ex[3]);
+	printf("%f ",ex[4]); printf("%f ",ex[5]); printf("]\n");
 
-	dim3 dimBlock(width, width);
-	dim3 dimGrid(1, 1);
+	//Part 2
 
-	mat_sub_kernel<<<dimGrid, dimBlock>>>(Md, Nd, Pd, width);
+	//Part 3
+	//Part 3a
+	printf("Part 3a\n");
+	float * in1 = new float[6];
+	in1[0] = 3; in1[1] = 4; in1[2] = 6; in1[3] = 7; in1[4] = 9; in1[5] = 10;
+	float * out1 = new float[6];
+	out1[0] = 0; out1[1] = 0; out1[2] = 0; out1[3] = 0; out1[4] = 0; out1[5] = 0;
 
-	cudaMemcpy(P, Pd, size, cudaMemcpyDeviceToHost);
-	cudaFree(Md);
-	cudaFree(Nd);
-	cudaFree(Pd);
-}
-
-__global__ void mat_add_kernel(float* Md, float* Nd, float* Pd, int width) {
-	int tx = threadIdx.x;
-	int ty = threadIdx.y;
-
-	float Pvalue = Md[ty*width+tx] + Nd[ty*width+tx];
-
-	Pd[ty*width+tx] = Pvalue;
-}
-
-void mat_add(float* M, float* N, float* P, int width) {
-	int size = width * width * sizeof(float);
-	float *Md;
-	float *Nd;
-	float *Pd;
-	//Matrix 1
-	cudaMalloc((void**)&Md, size);
-	cudaMemcpy(Md,M,size,cudaMemcpyHostToDevice);
-	//Matrix 2
-	cudaMalloc((void**)&Nd, size);
-	cudaMemcpy(Nd,N,size,cudaMemcpyHostToDevice);
-
-	cudaMalloc((void**)&Pd, size);
-
-	dim3 dimBlock(width, width);
-	dim3 dimGrid(1, 1);
-
-	mat_add_kernel<<<dimGrid, dimBlock>>>(Md, Nd, Pd, width);
-
-	cudaMemcpy(P, Pd, size, cudaMemcpyDeviceToHost);
-	cudaFree(Md);
-	cudaFree(Nd);
-	cudaFree(Pd);
-}
-__global__ void mat_mult_kernel(float* Md, float* Nd, float* Pd, int width) {
-	int tx = threadIdx.x;
-	int ty = threadIdx.y;
-
-	float Pvalue = 0;
-
-	for (int k = 0; k < width; ++k) {
-		float Mdelement = Md[ty * width + k];
-		float Ndelement = Nd[k * width + tx];
-		Pvalue += Mdelement * Ndelement;
-	}
-
-	Pd[ty*width+tx] = Pvalue;
-}
-
-void mat_mult(float* M, float* N, float* P, int width) {
-	int size = width * width * sizeof(float);
-	float *Md;
-	float *Nd;
-	float *Pd;
-	//Matrix 1
-	cudaMalloc((void**)&Md, size);
-	cudaMemcpy(Md,M,size,cudaMemcpyHostToDevice);
-	//Matrix 2
-	cudaMalloc((void**)&Nd, size);
-	cudaMemcpy(Nd,N,size,cudaMemcpyHostToDevice);
-
-	cudaMalloc((void**)&Pd, size);
-
-	dim3 dimBlock(width, width);
-	dim3 dimGrid(1, 1);
-
-	mat_mult_kernel<<<dimGrid, dimBlock>>>(Md, Nd, Pd, width);
-
-	cudaMemcpy(P, Pd, size, cudaMemcpyDeviceToHost);
-	cudaFree(Md);
-	cudaFree(Nd);
-	cudaFree(Pd);
-}
-
-
-int main1 () { //You need to fix linker issues so that your methods will be recognized, but in the meantime you can check out individual functions by putting them in main
-	float * M = new float[25];
-	M[0] = 2; M[1] = 1; M[2] = 1; M[3] = 1; M[4] = 1;
-	M[5] = 1; M[6] = 3; M[7] = 1; M[8] = 1; M[9] = 1;
-	M[10] = 1; M[11] = 1; M[12] = 4; M[13] = 1; M[14] = 1;
-	M[15] = 1; M[16] = 1; M[17] = 1; M[18] = 5; M[19] = 1;
-	M[20] = 1; M[21] = 1; M[22] = 1; M[23] = 1; M[24] = 6;
-	float * N = new float[25];
-	N[0] = 2; N[1] = 2; N[2] = 2; N[3] = 2; N[4] = 2;
-	N[5] = 2; N[6] = 2; N[7] = 2; N[8] = 2; N[9] = 2;
-	N[10] = 2; N[11] = 2; N[12] = 2; N[13] = 2; N[14] = 2;
-	N[15] = 2; N[16] = 2; N[17] = 2; N[18] = 2; N[19] = 2;
-	N[20] = 2; N[21] = 2; N[22] = 2; N[23] = 2; N[24] = 2;
-	float * P = new float[25];
-	P[0] = 0; P[1] = 0; P[2] = 0; P[3] = 0; P[4] = 0;
-	P[5] = 0; P[6] = 0; P[7] = 0; P[8] = 0; P[9] = 0;
-	P[10] = 0; P[11] = 0; P[12] = 0; P[13] = 0; P[14] = 0;
-	P[15] = 0; P[16] = 0; P[17] = 0; P[18] = 0; P[19] = 0;
-	P[20] = 0; P[21] = 0; P[22] = 0; P[23] = 0; P[24] = 0;
-
-	printf("Matrix M:\n");
-	printf("%f ",M[0]); printf("%f ",M[1]); printf("%f ",M[2]); printf("%f ",M[3]); printf("%f ",M[4]); printf("\n");
-	printf("%f ",M[5]); printf("%f ",M[6]); printf("%f ",M[7]); printf("%f ",M[8]); printf("%f ",M[9]); printf("\n");
-	printf("%f ",M[10]); printf("%f ",M[11]); printf("%f ",M[12]); printf("%f ",M[13]); printf("%f ",M[14]); printf("\n");
-	printf("%f ",M[15]); printf("%f ",M[16]); printf("%f ",M[17]); printf("%f ",M[18]); printf("%f ",M[19]); printf("\n");
-	printf("%f ",M[20]); printf("%f ",M[21]); printf("%f ",M[22]); printf("%f ",M[23]); printf("%f ",M[24]); printf("\n");
-	printf("\n");
-
-	printf("Matrix N:\n");
-	printf("%f ",N[0]); printf("%f ",N[1]); printf("%f ",N[2]); printf("%f ",N[3]); printf("%f ",N[4]); printf("\n");
-	printf("%f ",N[5]); printf("%f ",N[6]); printf("%f ",N[7]); printf("%f ",N[8]); printf("%f ",N[9]); printf("\n");
-	printf("%f ",N[10]); printf("%f ",N[11]); printf("%f ",N[12]); printf("%f ",N[13]); printf("%f ",N[14]); printf("\n");
-	printf("%f ",N[15]); printf("%f ",N[16]); printf("%f ",N[17]); printf("%f ",N[18]); printf("%f ",N[19]); printf("\n");
-	printf("%f ",N[20]); printf("%f ",N[21]); printf("%f ",N[22]); printf("%f ",N[23]); printf("%f ",N[24]); printf("\n");
-	printf("\n");
-
-	int size = 5*5*sizeof(float);
+	int size = 1*6*sizeof(float);
 	int numBlocks = 1;
-	dim3 threadsPerBlock(5,5);
+	dim3 threadsPerBlock(1,1);
 
-	mat_add(M,N,P,5);
+	prefix_sum_exclusive_one_block(in1,out1,6);
 
-	printf("GPU Matrix Add:\n");
-	printf("%f ",P[0]); printf("%f ",P[1]); printf("%f ",P[2]); printf("%f ",P[3]); printf("%f ",P[4]); printf("\n");
-	printf("%f ",P[5]); printf("%f ",P[6]); printf("%f ",P[7]); printf("%f ",P[8]); printf("%f ",P[9]); printf("\n");
-	printf("%f ",P[10]); printf("%f ",P[11]); printf("%f ",P[12]); printf("%f ",P[13]); printf("%f ",P[14]); printf("\n");
-	printf("%f ",P[15]); printf("%f ",P[16]); printf("%f ",P[17]); printf("%f ",P[18]); printf("%f ",P[19]); printf("\n");
-	printf("%f ",P[20]); printf("%f ",P[21]); printf("%f ",P[22]); printf("%f ",P[23]); printf("%f ",P[24]); printf("\n");
+	printf("GPU Prefix Sum Exclusive One Block:\n");
+	printf("Input Array:\n[");
+	printf("%f ",in1[0]); printf("%f ",in1[1]); printf("%f ",in1[2]); printf("%f ",in1[3]); printf("%f ",in1[4]); printf("\n");
+	printf("%f ",in1[5]); printf("]\n");
+	printf("Output Array:\n[");
+	printf("%f ",out1[0]); printf("%f ",out1[1]); printf("%f ",out1[2]); printf("%f ",out1[3]); printf("%f ",out1[4]); printf("\n");
+	printf("%f ",out1[5]); printf("]\n");
 	printf("\n");
 
-	CPU_mat_add(M,N,P,5);
+	float * in3 = new float[6];
+	in3[0] = 3; in3[1] = 4; in3[2] = 6; in3[3] = 7; in3[4] = 9; in3[5] = 10;
+	float * out3 = new float[6];
+	out3[0] = 0; out3[1] = 0; out3[2] = 0; out3[3] = 0; out3[4] = 0; out3[5] = 0;
 
-	printf("CPU Matrix Add:\n");
-	printf("%f ",P[0]); printf("%f ",P[1]); printf("%f ",P[2]); printf("%f ",P[3]); printf("%f ",P[4]); printf("\n");
-	printf("%f ",P[5]); printf("%f ",P[6]); printf("%f ",P[7]); printf("%f ",P[8]); printf("%f ",P[9]); printf("\n");
-	printf("%f ",P[10]); printf("%f ",P[11]); printf("%f ",P[12]); printf("%f ",P[13]); printf("%f ",P[14]); printf("\n");
-	printf("%f ",P[15]); printf("%f ",P[16]); printf("%f ",P[17]); printf("%f ",P[18]); printf("%f ",P[19]); printf("\n");
-	printf("%f ",P[20]); printf("%f ",P[21]); printf("%f ",P[22]); printf("%f ",P[23]); printf("%f ",P[24]); printf("\n");
+	prefix_sum_inclusive_one_block(in3,out3,6);
+
+	printf("GPU Prefix Sum Inclusive One Block:\n");
+	printf("Input Array:\n[");
+	printf("%f ",in3[0]); printf("%f ",in3[1]); printf("%f ",in3[2]); printf("%f ",in3[3]); printf("%f ",in3[4]); printf("\n");
+	printf("%f ",in3[5]); printf("]\n");
+	printf("Output Array:\n[");
+	printf("%f ",out3[0]); printf("%f ",out3[1]); printf("%f ",out3[2]); printf("%f ",out3[3]); printf("%f ",out3[4]); printf("\n");
+	printf("%f ",out3[5]); printf("]\n");
 	printf("\n");
 
-	mat_sub(M,N,P,5);
+	//Part 3b
+	printf("Part 3b\n"); //ONLY GOES TO 512 SO FAR
+	int size2 = 2000;
+	float * in2 = new float[size2];
+	float * out2 = new float[size2];
+	for (int i = 0; i < size2; i++) {
+		in2[i] = 1;
+		out2[i] = 0;
+	}
 
-	printf("GPU Matrix Subtract:\n");
-	printf("%f ",P[0]); printf("%f ",P[1]); printf("%f ",P[2]); printf("%f ",P[3]); printf("%f ",P[4]); printf("\n");
-	printf("%f ",P[5]); printf("%f ",P[6]); printf("%f ",P[7]); printf("%f ",P[8]); printf("%f ",P[9]); printf("\n");
-	printf("%f ",P[10]); printf("%f ",P[11]); printf("%f ",P[12]); printf("%f ",P[13]); printf("%f ",P[14]); printf("\n");
-	printf("%f ",P[15]); printf("%f ",P[16]); printf("%f ",P[17]); printf("%f ",P[18]); printf("%f ",P[19]); printf("\n");
-	printf("%f ",P[20]); printf("%f ",P[21]); printf("%f ",P[22]); printf("%f ",P[23]); printf("%f ",P[24]); printf("\n");
-	printf("\n");
+	printf("%i ", 4/3);
+	printf("%f ", 4.0f/3.0f);
 
-	CPU_mat_sub(M,N,P,5);
+	//prefix_sum_exclusive_all_lengths(in2,out2,size2);
+	//prefix_sum_exclusive_one_block(in2,out2,size2);
 
-	printf("CPU Matrix Subtract:\n");
-	printf("%f ",P[0]); printf("%f ",P[1]); printf("%f ",P[2]); printf("%f ",P[3]); printf("%f ",P[4]); printf("\n");
-	printf("%f ",P[5]); printf("%f ",P[6]); printf("%f ",P[7]); printf("%f ",P[8]); printf("%f ",P[9]); printf("\n");
-	printf("%f ",P[10]); printf("%f ",P[11]); printf("%f ",P[12]); printf("%f ",P[13]); printf("%f ",P[14]); printf("\n");
-	printf("%f ",P[15]); printf("%f ",P[16]); printf("%f ",P[17]); printf("%f ",P[18]); printf("%f ",P[19]); printf("\n");
-	printf("%f ",P[20]); printf("%f ",P[21]); printf("%f ",P[22]); printf("%f ",P[23]); printf("%f ",P[24]); printf("\n");
-	printf("\n");
+	/*printf("GPU Prefix Sum Exclusive All Lengths:\n");
+	printf("Input Array:\n[");
+	for (int i = 0; i < size2; i++) {
+		printf("%f ",in2[i]);
+	}
+	printf("]\n");
+	printf("Output Array:\n[");
+	for (int i = 0; i < size2; i++) {
+		printf("%f ",out2[i]);
+	}
+	printf("]\n");*/
 
-	mat_mult(M,N,P,5);
 
-	printf("GPU Matrix Multiply:\n");
-	printf("%f ",P[0]); printf("%f ",P[1]); printf("%f ",P[2]); printf("%f ",P[3]); printf("%f ",P[4]); printf("\n");
-	printf("%f ",P[5]); printf("%f ",P[6]); printf("%f ",P[7]); printf("%f ",P[8]); printf("%f ",P[9]); printf("\n");
-	printf("%f ",P[10]); printf("%f ",P[11]); printf("%f ",P[12]); printf("%f ",P[13]); printf("%f ",P[14]); printf("\n");
-	printf("%f ",P[15]); printf("%f ",P[16]); printf("%f ",P[17]); printf("%f ",P[18]); printf("%f ",P[19]); printf("\n");
-	printf("%f ",P[20]); printf("%f ",P[21]); printf("%f ",P[22]); printf("%f ",P[23]); printf("%f ",P[24]); printf("\n");
-	printf("\n");
-
-	CPU_mat_mult(M,N,P,5);
-
-	printf("CPU Matrix Multiply:\n");
-	printf("%f ",P[0]); printf("%f ",P[1]); printf("%f ",P[2]); printf("%f ",P[3]); printf("%f ",P[4]); printf("\n");
-	printf("%f ",P[5]); printf("%f ",P[6]); printf("%f ",P[7]); printf("%f ",P[8]); printf("%f ",P[9]); printf("\n");
-	printf("%f ",P[10]); printf("%f ",P[11]); printf("%f ",P[12]); printf("%f ",P[13]); printf("%f ",P[14]); printf("\n");
-	printf("%f ",P[15]); printf("%f ",P[16]); printf("%f ",P[17]); printf("%f ",P[18]); printf("%f ",P[19]); printf("\n");
-	printf("%f ",P[20]); printf("%f ",P[21]); printf("%f ",P[22]); printf("%f ",P[23]); printf("%f ",P[24]); printf("\n");
-	printf("\n");
 
 	getchar();
-
 	return 0;
 }
