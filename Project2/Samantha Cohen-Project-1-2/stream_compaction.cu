@@ -8,7 +8,7 @@
 
 __global__ void prefix_sum_exclusive_work_efficient_kernel(float *in, float *out, int n)
 {
-    /*extern __shared__ float temp[];
+   /* extern __shared__ float temp[];
     int tx = threadIdx.x;
     int offset = 1;
 	int a = tx;  
@@ -131,13 +131,22 @@ __global__ void prefix_sum_inclusive_one_block_kernel(float* in, float* out, int
 } 
 
 __global__ void prefix_sum_exclusive_naive_kernel(float* in, float* out, int n, int k, int k2) {
-	int tx = threadIdx.x;
-	if (tx == 0) {
-		out[tx] = 0;
-	} else {
-		in[k] = in[k2] + in[k];
-		out[tx] = in[k];
-	}
+	int tx = threadIdx.x;  
+	int pout = 0;
+	int pin = 1;
+	out[pout*n+tx] = in[tx];
+	for (int i = 1; i < n; i *= 2)  {  
+	  pout = 1 - pout;
+	  pin = 1 - pout;  
+	  __syncthreads();  
+		out[pout*n+tx] = out[pin*n+tx];
+	  if (tx >= i) { 
+		out[pout*n+tx] += out[pin*n+tx-i];  
+	  }
+	}  
+	__syncthreads(); 
+	out[tx+1] = out[pout*n+tx];
+	out[0] = 0;
 } 
 
 void prefix_sum_exclusive_naive(float* in1, float* out1, int width) {
@@ -165,7 +174,6 @@ void prefix_sum_exclusive_naive(float* in1, float* out1, int width) {
 			}
 		}
 	}
-
 	cudaMemcpy(out1, out, size, cudaMemcpyDeviceToHost);
 	cudaFree(in);
 	cudaFree(out);
@@ -389,20 +397,6 @@ __global__ void compact_stream_bool_kernel(float* in, float* out, int n) {
 	}
 } 
 
-__global__ void compact_stream_index_kernel(float* in, float* out, int n) {
-
-	extern __shared__ float index;
-
-	int tx = threadIdx.x;
-	for (int i = 0; i < n; i++) {
-		out[i] = index;
-		if (in[i] != 0) {
-			index++;
-		}
-	}
-
-} 
-
 void stream_compact(float* in1, float* out1, int width) {
 	unsigned int eltNum = 512;
 	int extra_space = 0;
@@ -420,8 +414,9 @@ void stream_compact(float* in1, float* out1, int width) {
 	dim3 dimBlock(threadNum*2, 1, 1);
 	dim3 dimGrid(2, 2, 1);
 
-	prefix_sum_exclusive_work_efficient_kernel<<<dimGrid, dimBlock, 2 * sharedMemorySize>>>(in, out, eltNum);
-
+	compact_stream_bool_kernel<<<dimGrid, dimBlock, 2 * sharedMemorySize>>>(in, out, eltNum);
+	in = out;
+	prefix_sum_exclusive_one_block_kernel<<<dimGrid, dimBlock, 2 * sharedMemorySize>>>(in, out, eltNum);
 	cudaMemcpy(out1, out, size, cudaMemcpyDeviceToHost);
 	cudaFree(in);
 	cudaFree(out);
@@ -505,14 +500,17 @@ int main () {
 	printf("Part 3b\n");
 	int size2 = 550;
 	float * in2 = new float[size2];
-	float * out2 = new float[size2];
+	float * out2 = new float[size2];//CUDAMALLOC YOUR ARRAYS
+	//in2 = (float*) malloc(size);
+	//out2 = (float*) malloc(size);
 	for (int i = 0; i < size2; i++) {
 		in2[i] = 1;
 		out2[i] = 0;
 	}
 
 	//prefix_sum_exclusive_all_lengths(in2,out2,size2);
-
+	//free(in2);
+	//free(out2);
 	printf("GPU Prefix Sum Exclusive All Lengths:\n");
 	/*printf("Input Array:\n[");
 	for (int i = 0; i < size2; i++) {
@@ -528,7 +526,7 @@ int main () {
 	//Part 4
 	//CPU
 	printf("\nPart 4\n");
-	printf("CPU:");
+	printf("CPU Scatter:");
 	float arr2[9];
 	arr2[0] = 3.0f;
 	arr2[1] = 0.0f;
@@ -551,10 +549,27 @@ int main () {
 	}
 	printf("]\n");
 
+	//GPU Scatter No Thrust
+	printf("GPU Scatter:\n");
+	exx = new float[9];
+	stream_compact(arr2,exx,9);
+
+	printf("Input Array:\n[");
+	for (int i = 0; i < 9; i++) {
+		printf("%f ",arr2[i]);
+	}
+	printf("]\n");
+	printf("Output Array:\n[");
+	for (int i = 0; i < 9; i++) {
+		printf("%f ",exx[i]);
+	}
+	printf("]\n");
+	
+	
 	//Extra Credit
 	printf("\nExtra Credit\n");
 
-	//prefix_sum_exclusive_work_efficient(in1,out1,6);
+	prefix_sum_exclusive_work_efficient(in1,out1,6);
 
 	printf("\nGPU Prefix Sum Exclusive Work Efficient:\n");
 	printf("Input Array:\n[");
@@ -565,6 +580,8 @@ int main () {
 	printf("%f ",out1[5]); printf("]\n");
 	printf("\n");
 
+	//free(in1);
+	//free(out1);
 	getchar();
 	return 0;
 }

@@ -1,4 +1,4 @@
-﻿Build started 9/28/2014 3:27:03 PM.
+﻿Build started 9/28/2014 6:16:30 PM.
      1>Project "C:\Users\Samantha\Documents\GitHub\Project2-StreamCompaction\Project2\Samantha Cohen-Project-1-2\Samantha Cohen-Project-1-2.vcxproj" on node 2 (build target(s)).
      1>InitializeBuildStatus:
          Creating "Debug\Samantha Cohen-Project-1-2.unsuccessfulbuild" because "AlwaysCreate" was specified.
@@ -8,56 +8,60 @@
        Skipping target "AddCudaCompilePropsDeps" because all output files are up-to-date with respect to the input files.
        CudaBuild:
          Compiling CUDA source file stream_compaction.cu...
-         cmd.exe /C "C:\Users\Samantha\AppData\Local\Temp\tmp6c5ff8d1b67e4aa88b7b87b3a4273e10.cmd"
+         cmd.exe /C "C:\Users\Samantha\AppData\Local\Temp\tmpd69ed8ae87a9443e8c2c665696b184be.cmd"
          "C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v6.5\bin\nvcc.exe" -gencode=arch=compute_20,code=\"sm_20,compute_20\" --use-local-env --cl-version 2010 -ccbin "C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin"  -I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v6.5\include" -I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v6.5\include"  -G   --keep-dir Debug -maxrregcount=0  --machine 32 --compile -cudart static  -g   -D_MBCS -Xcompiler "/EHsc /W3 /nologo /Od /Zi /RTC1 /MDd  " -o Debug\stream_compaction.cu.obj "C:\Users\Samantha\Documents\GitHub\Project2-StreamCompaction\Project2\Samantha Cohen-Project-1-2\stream_compaction.cu"
          
          C:\Users\Samantha\Documents\GitHub\Project2-StreamCompaction\Project2\Samantha Cohen-Project-1-2>"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v6.5\bin\nvcc.exe" -gencode=arch=compute_20,code=\"sm_20,compute_20\" --use-local-env --cl-version 2010 -ccbin "C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin"  -I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v6.5\include" -I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v6.5\include"  -G   --keep-dir Debug -maxrregcount=0  --machine 32 --compile -cudart static  -g   -D_MBCS -Xcompiler "/EHsc /W3 /nologo /Od /Zi /RTC1 /MDd  " -o Debug\stream_compaction.cu.obj "C:\Users\Samantha\Documents\GitHub\Project2-StreamCompaction\Project2\Samantha Cohen-Project-1-2\stream_compaction.cu" 
-     1>C:/Users/Samantha/Documents/GitHub/Project2-StreamCompaction/Project2/Samantha Cohen-Project-1-2/stream_compaction.cu(145): warning : variable "extra_space" was declared but never referenced
+     1>C:/Users/Samantha/Documents/GitHub/Project2-StreamCompaction/Project2/Samantha Cohen-Project-1-2/stream_compaction.cu(154): warning : variable "extra_space" was declared but never referenced
          
-     1>C:/Users/Samantha/Documents/GitHub/Project2-StreamCompaction/Project2/Samantha Cohen-Project-1-2/stream_compaction.cu(147): warning : variable "sharedMemorySize" was declared but never referenced
+     1>C:/Users/Samantha/Documents/GitHub/Project2-StreamCompaction/Project2/Samantha Cohen-Project-1-2/stream_compaction.cu(156): warning : variable "sharedMemorySize" was declared but never referenced
          
-     1>C:/Users/Samantha/Documents/GitHub/Project2-StreamCompaction/Project2/Samantha Cohen-Project-1-2/stream_compaction.cu(176): warning : variable "extra_space" was declared but never referenced
+     1>C:/Users/Samantha/Documents/GitHub/Project2-StreamCompaction/Project2/Samantha Cohen-Project-1-2/stream_compaction.cu(184): warning : variable "extra_space" was declared but never referenced
          
-     1>C:/Users/Samantha/Documents/GitHub/Project2-StreamCompaction/Project2/Samantha Cohen-Project-1-2/stream_compaction.cu(200): warning : variable "extra_space" was declared but never referenced
+     1>C:/Users/Samantha/Documents/GitHub/Project2-StreamCompaction/Project2/Samantha Cohen-Project-1-2/stream_compaction.cu(208): warning : variable "extra_space" was declared but never referenced
          
-     1>C:/Users/Samantha/Documents/GitHub/Project2-StreamCompaction/Project2/Samantha Cohen-Project-1-2/stream_compaction.cu(227): warning : variable "extra_space" was declared but never referenced
+     1>C:/Users/Samantha/Documents/GitHub/Project2-StreamCompaction/Project2/Samantha Cohen-Project-1-2/stream_compaction.cu(235): warning : variable "extra_space" was declared but never referenced
          
-     1>C:/Users/Samantha/Documents/GitHub/Project2-StreamCompaction/Project2/Samantha Cohen-Project-1-2/stream_compaction.cu(360): warning : variable "extra_space" was declared but never referenced
+     1>C:/Users/Samantha/Documents/GitHub/Project2-StreamCompaction/Project2/Samantha Cohen-Project-1-2/stream_compaction.cu(369): warning : variable "extra_space" was declared but never referenced
          
-     1>C:/Users/Samantha/Documents/GitHub/Project2-StreamCompaction/Project2/Samantha Cohen-Project-1-2/stream_compaction.cu(415): warning : variable "size" was declared but never referenced
+     1>C:/Users/Samantha/Documents/GitHub/Project2-StreamCompaction/Project2/Samantha Cohen-Project-1-2/stream_compaction.cu(402): warning : variable "extra_space" was declared but never referenced
          
-     1>C:/Users/Samantha/Documents/GitHub/Project2-StreamCompaction/Project2/Samantha Cohen-Project-1-2/stream_compaction.cu(416): warning : variable "numBlocks" was declared but never referenced
+     1>C:/Users/Samantha/Documents/GitHub/Project2-StreamCompaction/Project2/Samantha Cohen-Project-1-2/stream_compaction.cu(458): warning : variable "size" was declared but never referenced
          
-     1>C:/Users/Samantha/Documents/GitHub/Project2-StreamCompaction/Project2/Samantha Cohen-Project-1-2/stream_compaction.cu(145): warning : variable "extra_space" was declared but never referenced
+     1>C:/Users/Samantha/Documents/GitHub/Project2-StreamCompaction/Project2/Samantha Cohen-Project-1-2/stream_compaction.cu(459): warning : variable "numBlocks" was declared but never referenced
          
-     1>C:/Users/Samantha/Documents/GitHub/Project2-StreamCompaction/Project2/Samantha Cohen-Project-1-2/stream_compaction.cu(147): warning : variable "sharedMemorySize" was declared but never referenced
+     1>C:/Users/Samantha/Documents/GitHub/Project2-StreamCompaction/Project2/Samantha Cohen-Project-1-2/stream_compaction.cu(154): warning : variable "extra_space" was declared but never referenced
          
-     1>C:/Users/Samantha/Documents/GitHub/Project2-StreamCompaction/Project2/Samantha Cohen-Project-1-2/stream_compaction.cu(176): warning : variable "extra_space" was declared but never referenced
+     1>C:/Users/Samantha/Documents/GitHub/Project2-StreamCompaction/Project2/Samantha Cohen-Project-1-2/stream_compaction.cu(156): warning : variable "sharedMemorySize" was declared but never referenced
          
-     1>C:/Users/Samantha/Documents/GitHub/Project2-StreamCompaction/Project2/Samantha Cohen-Project-1-2/stream_compaction.cu(200): warning : variable "extra_space" was declared but never referenced
+     1>C:/Users/Samantha/Documents/GitHub/Project2-StreamCompaction/Project2/Samantha Cohen-Project-1-2/stream_compaction.cu(184): warning : variable "extra_space" was declared but never referenced
          
-     1>C:/Users/Samantha/Documents/GitHub/Project2-StreamCompaction/Project2/Samantha Cohen-Project-1-2/stream_compaction.cu(227): warning : variable "extra_space" was declared but never referenced
+     1>C:/Users/Samantha/Documents/GitHub/Project2-StreamCompaction/Project2/Samantha Cohen-Project-1-2/stream_compaction.cu(208): warning : variable "extra_space" was declared but never referenced
          
-     1>C:/Users/Samantha/Documents/GitHub/Project2-StreamCompaction/Project2/Samantha Cohen-Project-1-2/stream_compaction.cu(360): warning : variable "extra_space" was declared but never referenced
+     1>C:/Users/Samantha/Documents/GitHub/Project2-StreamCompaction/Project2/Samantha Cohen-Project-1-2/stream_compaction.cu(235): warning : variable "extra_space" was declared but never referenced
          
-     1>C:/Users/Samantha/Documents/GitHub/Project2-StreamCompaction/Project2/Samantha Cohen-Project-1-2/stream_compaction.cu(415): warning : variable "size" was declared but never referenced
+     1>C:/Users/Samantha/Documents/GitHub/Project2-StreamCompaction/Project2/Samantha Cohen-Project-1-2/stream_compaction.cu(369): warning : variable "extra_space" was declared but never referenced
          
-     1>C:/Users/Samantha/Documents/GitHub/Project2-StreamCompaction/Project2/Samantha Cohen-Project-1-2/stream_compaction.cu(416): warning : variable "numBlocks" was declared but never referenced
+     1>C:/Users/Samantha/Documents/GitHub/Project2-StreamCompaction/Project2/Samantha Cohen-Project-1-2/stream_compaction.cu(402): warning : variable "extra_space" was declared but never referenced
+         
+     1>C:/Users/Samantha/Documents/GitHub/Project2-StreamCompaction/Project2/Samantha Cohen-Project-1-2/stream_compaction.cu(458): warning : variable "size" was declared but never referenced
+         
+     1>C:/Users/Samantha/Documents/GitHub/Project2-StreamCompaction/Project2/Samantha Cohen-Project-1-2/stream_compaction.cu(459): warning : variable "numBlocks" was declared but never referenced
          
          stream_compaction.cu
-     1>C:/Users/Samantha/Documents/GitHub/Project2-StreamCompaction/Project2/Samantha Cohen-Project-1-2/stream_compaction.cu(163): warning C4244: 'initializing' : conversion from 'float' to 'int', possible loss of data
-     1>C:/Users/Samantha/Documents/GitHub/Project2-StreamCompaction/Project2/Samantha Cohen-Project-1-2/stream_compaction.cu(247): warning C4018: '<' : signed/unsigned mismatch
-     1>C:/Users/Samantha/Documents/GitHub/Project2-StreamCompaction/Project2/Samantha Cohen-Project-1-2/stream_compaction.cu(250): warning C4018: '<' : signed/unsigned mismatch
-     1>C:/Users/Samantha/Documents/GitHub/Project2-StreamCompaction/Project2/Samantha Cohen-Project-1-2/stream_compaction.cu(261): warning C4018: '<' : signed/unsigned mismatch
-     1>C:/Users/Samantha/Documents/GitHub/Project2-StreamCompaction/Project2/Samantha Cohen-Project-1-2/stream_compaction.cu(265): warning C4018: '<' : signed/unsigned mismatch
-     1>C:/Users/Samantha/Documents/GitHub/Project2-StreamCompaction/Project2/Samantha Cohen-Project-1-2/stream_compaction.cu(283): warning C4018: '<' : signed/unsigned mismatch
-     1>C:/Users/Samantha/Documents/GitHub/Project2-StreamCompaction/Project2/Samantha Cohen-Project-1-2/stream_compaction.cu(297): warning C4018: '<' : signed/unsigned mismatch
-     1>C:/Users/Samantha/Documents/GitHub/Project2-StreamCompaction/Project2/Samantha Cohen-Project-1-2/stream_compaction.cu(300): warning C4018: '<' : signed/unsigned mismatch
-     1>C:/Users/Samantha/Documents/GitHub/Project2-StreamCompaction/Project2/Samantha Cohen-Project-1-2/stream_compaction.cu(319): warning C4018: '<' : signed/unsigned mismatch
-     1>C:/Users/Samantha/Documents/GitHub/Project2-StreamCompaction/Project2/Samantha Cohen-Project-1-2/stream_compaction.cu(320): warning C4018: '<' : signed/unsigned mismatch
-     1>C:/Users/Samantha/Documents/GitHub/Project2-StreamCompaction/Project2/Samantha Cohen-Project-1-2/stream_compaction.cu(331): warning C4018: '<' : signed/unsigned mismatch
-     1>C:/Users/Samantha/Documents/GitHub/Project2-StreamCompaction/Project2/Samantha Cohen-Project-1-2/stream_compaction.cu(332): warning C4018: '<' : signed/unsigned mismatch
-     1>C:/Users/Samantha/Documents/GitHub/Project2-StreamCompaction/Project2/Samantha Cohen-Project-1-2/stream_compaction.cu(351): warning C4018: '<' : signed/unsigned mismatch
+     1>C:/Users/Samantha/Documents/GitHub/Project2-StreamCompaction/Project2/Samantha Cohen-Project-1-2/stream_compaction.cu(172): warning C4244: 'initializing' : conversion from 'float' to 'int', possible loss of data
+     1>C:/Users/Samantha/Documents/GitHub/Project2-StreamCompaction/Project2/Samantha Cohen-Project-1-2/stream_compaction.cu(255): warning C4018: '<' : signed/unsigned mismatch
+     1>C:/Users/Samantha/Documents/GitHub/Project2-StreamCompaction/Project2/Samantha Cohen-Project-1-2/stream_compaction.cu(258): warning C4018: '<' : signed/unsigned mismatch
+     1>C:/Users/Samantha/Documents/GitHub/Project2-StreamCompaction/Project2/Samantha Cohen-Project-1-2/stream_compaction.cu(269): warning C4018: '<' : signed/unsigned mismatch
+     1>C:/Users/Samantha/Documents/GitHub/Project2-StreamCompaction/Project2/Samantha Cohen-Project-1-2/stream_compaction.cu(273): warning C4018: '<' : signed/unsigned mismatch
+     1>C:/Users/Samantha/Documents/GitHub/Project2-StreamCompaction/Project2/Samantha Cohen-Project-1-2/stream_compaction.cu(291): warning C4018: '<' : signed/unsigned mismatch
+     1>C:/Users/Samantha/Documents/GitHub/Project2-StreamCompaction/Project2/Samantha Cohen-Project-1-2/stream_compaction.cu(305): warning C4018: '<' : signed/unsigned mismatch
+     1>C:/Users/Samantha/Documents/GitHub/Project2-StreamCompaction/Project2/Samantha Cohen-Project-1-2/stream_compaction.cu(308): warning C4018: '<' : signed/unsigned mismatch
+     1>C:/Users/Samantha/Documents/GitHub/Project2-StreamCompaction/Project2/Samantha Cohen-Project-1-2/stream_compaction.cu(327): warning C4018: '<' : signed/unsigned mismatch
+     1>C:/Users/Samantha/Documents/GitHub/Project2-StreamCompaction/Project2/Samantha Cohen-Project-1-2/stream_compaction.cu(328): warning C4018: '<' : signed/unsigned mismatch
+     1>C:/Users/Samantha/Documents/GitHub/Project2-StreamCompaction/Project2/Samantha Cohen-Project-1-2/stream_compaction.cu(339): warning C4018: '<' : signed/unsigned mismatch
+     1>C:/Users/Samantha/Documents/GitHub/Project2-StreamCompaction/Project2/Samantha Cohen-Project-1-2/stream_compaction.cu(340): warning C4018: '<' : signed/unsigned mismatch
+     1>C:/Users/Samantha/Documents/GitHub/Project2-StreamCompaction/Project2/Samantha Cohen-Project-1-2/stream_compaction.cu(359): warning C4018: '<' : signed/unsigned mismatch
      1>C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v6.5\include\thrust/system/detail/internal/scalar/general_copy.h(43): warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
                  C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v6.5\include\thrust/system/detail/internal/scalar/copy.inl(69) : see reference to function template instantiation 'OutputIterator thrust::system::detail::internal::scalar::general_copy<InputIterator,OutputIterator>(InputIterator,InputIterator,OutputIterator)' being compiled
                  with
@@ -148,7 +152,7 @@
                      InputIterator=thrust::detail::normal_iterator<thrust::device_ptr<float>>,
                      DerivedPolicy=thrust::system::cuda::detail::tag
                  ]
-                 C:/Users/Samantha/Documents/GitHub/Project2-StreamCompaction/Project2/Samantha Cohen-Project-1-2/stream_compaction.cu(350) : see reference to function template instantiation 'OutputIterator thrust::copy<thrust::detail::normal_iterator<Pointer>,std::_Vector_iterator<_Myvec>>(InputIterator,InputIterator,OutputIterator)' being compiled
+                 C:/Users/Samantha/Documents/GitHub/Project2-StreamCompaction/Project2/Samantha Cohen-Project-1-2/stream_compaction.cu(358) : see reference to function template instantiation 'OutputIterator thrust::copy<thrust::detail::normal_iterator<Pointer>,std::_Vector_iterator<_Myvec>>(InputIterator,InputIterator,OutputIterator)' being compiled
                  with
                  [
                      OutputIterator=std::_Vector_iterator<std::_Vector_val<int,std::allocator<int>>>,
@@ -173,4 +177,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:10.70
+Time Elapsed 00:00:11.09
