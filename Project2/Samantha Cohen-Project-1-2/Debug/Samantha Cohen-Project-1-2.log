@@ -1,4 +1,4 @@
-﻿Build started 9/27/2014 8:32:31 PM.
+﻿Build started 9/28/2014 3:27:03 PM.
      1>Project "C:\Users\Samantha\Documents\GitHub\Project2-StreamCompaction\Project2\Samantha Cohen-Project-1-2\Samantha Cohen-Project-1-2.vcxproj" on node 2 (build target(s)).
      1>InitializeBuildStatus:
          Creating "Debug\Samantha Cohen-Project-1-2.unsuccessfulbuild" because "AlwaysCreate" was specified.
@@ -8,35 +8,154 @@
        Skipping target "AddCudaCompilePropsDeps" because all output files are up-to-date with respect to the input files.
        CudaBuild:
          Compiling CUDA source file stream_compaction.cu...
-         cmd.exe /C "C:\Users\Samantha\AppData\Local\Temp\tmp166a691561c7411f835efa3b03257504.cmd"
+         cmd.exe /C "C:\Users\Samantha\AppData\Local\Temp\tmp6c5ff8d1b67e4aa88b7b87b3a4273e10.cmd"
          "C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v6.5\bin\nvcc.exe" -gencode=arch=compute_20,code=\"sm_20,compute_20\" --use-local-env --cl-version 2010 -ccbin "C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin"  -I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v6.5\include" -I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v6.5\include"  -G   --keep-dir Debug -maxrregcount=0  --machine 32 --compile -cudart static  -g   -D_MBCS -Xcompiler "/EHsc /W3 /nologo /Od /Zi /RTC1 /MDd  " -o Debug\stream_compaction.cu.obj "C:\Users\Samantha\Documents\GitHub\Project2-StreamCompaction\Project2\Samantha Cohen-Project-1-2\stream_compaction.cu"
          
          C:\Users\Samantha\Documents\GitHub\Project2-StreamCompaction\Project2\Samantha Cohen-Project-1-2>"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v6.5\bin\nvcc.exe" -gencode=arch=compute_20,code=\"sm_20,compute_20\" --use-local-env --cl-version 2010 -ccbin "C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin"  -I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v6.5\include" -I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v6.5\include"  -G   --keep-dir Debug -maxrregcount=0  --machine 32 --compile -cudart static  -g   -D_MBCS -Xcompiler "/EHsc /W3 /nologo /Od /Zi /RTC1 /MDd  " -o Debug\stream_compaction.cu.obj "C:\Users\Samantha\Documents\GitHub\Project2-StreamCompaction\Project2\Samantha Cohen-Project-1-2\stream_compaction.cu" 
-     1>C:/Users/Samantha/Documents/GitHub/Project2-StreamCompaction/Project2/Samantha Cohen-Project-1-2/stream_compaction.cu(151): warning : variable "extra_space" was declared but never referenced
+     1>C:/Users/Samantha/Documents/GitHub/Project2-StreamCompaction/Project2/Samantha Cohen-Project-1-2/stream_compaction.cu(145): warning : variable "extra_space" was declared but never referenced
          
-     1>C:/Users/Samantha/Documents/GitHub/Project2-StreamCompaction/Project2/Samantha Cohen-Project-1-2/stream_compaction.cu(175): warning : variable "extra_space" was declared but never referenced
+     1>C:/Users/Samantha/Documents/GitHub/Project2-StreamCompaction/Project2/Samantha Cohen-Project-1-2/stream_compaction.cu(147): warning : variable "sharedMemorySize" was declared but never referenced
          
-     1>C:/Users/Samantha/Documents/GitHub/Project2-StreamCompaction/Project2/Samantha Cohen-Project-1-2/stream_compaction.cu(199): warning : variable "extra_space" was declared but never referenced
+     1>C:/Users/Samantha/Documents/GitHub/Project2-StreamCompaction/Project2/Samantha Cohen-Project-1-2/stream_compaction.cu(176): warning : variable "extra_space" was declared but never referenced
          
-     1>C:/Users/Samantha/Documents/GitHub/Project2-StreamCompaction/Project2/Samantha Cohen-Project-1-2/stream_compaction.cu(205): warning : variable "blockNum" was declared but never referenced
+     1>C:/Users/Samantha/Documents/GitHub/Project2-StreamCompaction/Project2/Samantha Cohen-Project-1-2/stream_compaction.cu(200): warning : variable "extra_space" was declared but never referenced
          
-     1>C:/Users/Samantha/Documents/GitHub/Project2-StreamCompaction/Project2/Samantha Cohen-Project-1-2/stream_compaction.cu(282): warning : variable "size" was declared but never referenced
+     1>C:/Users/Samantha/Documents/GitHub/Project2-StreamCompaction/Project2/Samantha Cohen-Project-1-2/stream_compaction.cu(227): warning : variable "extra_space" was declared but never referenced
          
-     1>C:/Users/Samantha/Documents/GitHub/Project2-StreamCompaction/Project2/Samantha Cohen-Project-1-2/stream_compaction.cu(283): warning : variable "numBlocks" was declared but never referenced
+     1>C:/Users/Samantha/Documents/GitHub/Project2-StreamCompaction/Project2/Samantha Cohen-Project-1-2/stream_compaction.cu(360): warning : variable "extra_space" was declared but never referenced
          
-     1>C:/Users/Samantha/Documents/GitHub/Project2-StreamCompaction/Project2/Samantha Cohen-Project-1-2/stream_compaction.cu(151): warning : variable "extra_space" was declared but never referenced
+     1>C:/Users/Samantha/Documents/GitHub/Project2-StreamCompaction/Project2/Samantha Cohen-Project-1-2/stream_compaction.cu(415): warning : variable "size" was declared but never referenced
          
-     1>C:/Users/Samantha/Documents/GitHub/Project2-StreamCompaction/Project2/Samantha Cohen-Project-1-2/stream_compaction.cu(175): warning : variable "extra_space" was declared but never referenced
+     1>C:/Users/Samantha/Documents/GitHub/Project2-StreamCompaction/Project2/Samantha Cohen-Project-1-2/stream_compaction.cu(416): warning : variable "numBlocks" was declared but never referenced
          
-     1>C:/Users/Samantha/Documents/GitHub/Project2-StreamCompaction/Project2/Samantha Cohen-Project-1-2/stream_compaction.cu(199): warning : variable "extra_space" was declared but never referenced
+     1>C:/Users/Samantha/Documents/GitHub/Project2-StreamCompaction/Project2/Samantha Cohen-Project-1-2/stream_compaction.cu(145): warning : variable "extra_space" was declared but never referenced
          
-     1>C:/Users/Samantha/Documents/GitHub/Project2-StreamCompaction/Project2/Samantha Cohen-Project-1-2/stream_compaction.cu(205): warning : variable "blockNum" was declared but never referenced
+     1>C:/Users/Samantha/Documents/GitHub/Project2-StreamCompaction/Project2/Samantha Cohen-Project-1-2/stream_compaction.cu(147): warning : variable "sharedMemorySize" was declared but never referenced
          
-     1>C:/Users/Samantha/Documents/GitHub/Project2-StreamCompaction/Project2/Samantha Cohen-Project-1-2/stream_compaction.cu(282): warning : variable "size" was declared but never referenced
+     1>C:/Users/Samantha/Documents/GitHub/Project2-StreamCompaction/Project2/Samantha Cohen-Project-1-2/stream_compaction.cu(176): warning : variable "extra_space" was declared but never referenced
          
-     1>C:/Users/Samantha/Documents/GitHub/Project2-StreamCompaction/Project2/Samantha Cohen-Project-1-2/stream_compaction.cu(283): warning : variable "numBlocks" was declared but never referenced
+     1>C:/Users/Samantha/Documents/GitHub/Project2-StreamCompaction/Project2/Samantha Cohen-Project-1-2/stream_compaction.cu(200): warning : variable "extra_space" was declared but never referenced
+         
+     1>C:/Users/Samantha/Documents/GitHub/Project2-StreamCompaction/Project2/Samantha Cohen-Project-1-2/stream_compaction.cu(227): warning : variable "extra_space" was declared but never referenced
+         
+     1>C:/Users/Samantha/Documents/GitHub/Project2-StreamCompaction/Project2/Samantha Cohen-Project-1-2/stream_compaction.cu(360): warning : variable "extra_space" was declared but never referenced
+         
+     1>C:/Users/Samantha/Documents/GitHub/Project2-StreamCompaction/Project2/Samantha Cohen-Project-1-2/stream_compaction.cu(415): warning : variable "size" was declared but never referenced
+         
+     1>C:/Users/Samantha/Documents/GitHub/Project2-StreamCompaction/Project2/Samantha Cohen-Project-1-2/stream_compaction.cu(416): warning : variable "numBlocks" was declared but never referenced
          
          stream_compaction.cu
+     1>C:/Users/Samantha/Documents/GitHub/Project2-StreamCompaction/Project2/Samantha Cohen-Project-1-2/stream_compaction.cu(163): warning C4244: 'initializing' : conversion from 'float' to 'int', possible loss of data
+     1>C:/Users/Samantha/Documents/GitHub/Project2-StreamCompaction/Project2/Samantha Cohen-Project-1-2/stream_compaction.cu(247): warning C4018: '<' : signed/unsigned mismatch
+     1>C:/Users/Samantha/Documents/GitHub/Project2-StreamCompaction/Project2/Samantha Cohen-Project-1-2/stream_compaction.cu(250): warning C4018: '<' : signed/unsigned mismatch
+     1>C:/Users/Samantha/Documents/GitHub/Project2-StreamCompaction/Project2/Samantha Cohen-Project-1-2/stream_compaction.cu(261): warning C4018: '<' : signed/unsigned mismatch
+     1>C:/Users/Samantha/Documents/GitHub/Project2-StreamCompaction/Project2/Samantha Cohen-Project-1-2/stream_compaction.cu(265): warning C4018: '<' : signed/unsigned mismatch
+     1>C:/Users/Samantha/Documents/GitHub/Project2-StreamCompaction/Project2/Samantha Cohen-Project-1-2/stream_compaction.cu(283): warning C4018: '<' : signed/unsigned mismatch
+     1>C:/Users/Samantha/Documents/GitHub/Project2-StreamCompaction/Project2/Samantha Cohen-Project-1-2/stream_compaction.cu(297): warning C4018: '<' : signed/unsigned mismatch
+     1>C:/Users/Samantha/Documents/GitHub/Project2-StreamCompaction/Project2/Samantha Cohen-Project-1-2/stream_compaction.cu(300): warning C4018: '<' : signed/unsigned mismatch
+     1>C:/Users/Samantha/Documents/GitHub/Project2-StreamCompaction/Project2/Samantha Cohen-Project-1-2/stream_compaction.cu(319): warning C4018: '<' : signed/unsigned mismatch
+     1>C:/Users/Samantha/Documents/GitHub/Project2-StreamCompaction/Project2/Samantha Cohen-Project-1-2/stream_compaction.cu(320): warning C4018: '<' : signed/unsigned mismatch
+     1>C:/Users/Samantha/Documents/GitHub/Project2-StreamCompaction/Project2/Samantha Cohen-Project-1-2/stream_compaction.cu(331): warning C4018: '<' : signed/unsigned mismatch
+     1>C:/Users/Samantha/Documents/GitHub/Project2-StreamCompaction/Project2/Samantha Cohen-Project-1-2/stream_compaction.cu(332): warning C4018: '<' : signed/unsigned mismatch
+     1>C:/Users/Samantha/Documents/GitHub/Project2-StreamCompaction/Project2/Samantha Cohen-Project-1-2/stream_compaction.cu(351): warning C4018: '<' : signed/unsigned mismatch
+     1>C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v6.5\include\thrust/system/detail/internal/scalar/general_copy.h(43): warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
+                 C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v6.5\include\thrust/system/detail/internal/scalar/copy.inl(69) : see reference to function template instantiation 'OutputIterator thrust::system::detail::internal::scalar::general_copy<InputIterator,OutputIterator>(InputIterator,InputIterator,OutputIterator)' being compiled
+                 with
+                 [
+                     OutputIterator=std::_Vector_iterator<std::_Vector_val<int,std::allocator<int>>>,
+                     InputIterator=thrust::detail::normal_iterator<thrust::pointer<float,thrust::system::cpp::detail::tag,thrust::use_default,thrust::use_default>>
+                 ]
+                 C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v6.5\include\thrust/system/detail/internal/scalar/copy.inl(106) : see reference to function template instantiation 'OutputIterator thrust::system::detail::internal::scalar::copy_detail::copy<InputIterator,OutputIterator>(InputIterator,InputIterator,OutputIterator,thrust::detail::false_type)' being compiled
+                 with
+                 [
+                     OutputIterator=std::_Vector_iterator<std::_Vector_val<int,std::allocator<int>>>,
+                     InputIterator=thrust::detail::normal_iterator<thrust::pointer<float,thrust::system::cpp::detail::tag,thrust::use_default,thrust::use_default>>
+                 ]
+                 C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v6.5\include\thrust/system/cpp/detail/copy.h(43) : see reference to function template instantiation 'OutputIterator thrust::system::detail::internal::scalar::copy<InputIterator,OutputIterator>(InputIterator,InputIterator,OutputIterator)' being compiled
+                 with
+                 [
+                     OutputIterator=std::_Vector_iterator<std::_Vector_val<int,std::allocator<int>>>,
+                     InputIterator=thrust::detail::normal_iterator<thrust::pointer<float,thrust::system::cpp::detail::tag,thrust::use_default,thrust::use_default>>
+                 ]
+                 C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v6.5\include\thrust/detail/copy.inl(35) : see reference to function template instantiation 'OutputIterator thrust::system::cpp::detail::copy<InputIterator,OutputIterator>(thrust::system::cpp::detail::tag,InputIterator,InputIterator,OutputIterator)' being compiled
+                 with
+                 [
+                     OutputIterator=std::_Vector_iterator<std::_Vector_val<int,std::allocator<int>>>,
+                     InputIterator=thrust::detail::normal_iterator<thrust::pointer<float,thrust::system::cpp::detail::tag,thrust::use_default,thrust::use_default>>
+                 ]
+                 C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v6.5\include\thrust/system/cuda/detail/copy_cross_system.inl(207) : see reference to function template instantiation 'OutputIterator thrust::copy<DerivedPolicy,thrust::detail::normal_iterator<Pointer>,RandomAccessIterator2>(const thrust::detail::execution_policy_base<DerivedPolicy> &,InputIterator,InputIterator,OutputIterator)' being compiled
+                 with
+                 [
+                     OutputIterator=std::_Vector_iterator<std::_Vector_val<int,std::allocator<int>>>,
+                     DerivedPolicy=thrust::system::cpp::detail::tag,
+                     Pointer=thrust::pointer<float,thrust::system::cpp::detail::tag,thrust::use_default,thrust::use_default>,
+                     RandomAccessIterator2=std::_Vector_iterator<std::_Vector_val<int,std::allocator<int>>>,
+                     InputIterator=thrust::detail::normal_iterator<thrust::pointer<float,thrust::system::cpp::detail::tag,thrust::use_default,thrust::use_default>>
+                 ]
+                 C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v6.5\include\thrust/system/cuda/detail/copy_cross_system.inl(227) : see reference to function template instantiation 'RandomAccessIterator2 thrust::system::cuda::detail::detail::non_trivial_random_access_copy_cross_system<thrust::system::cuda::detail::tag,thrust::system::cpp::detail::tag,RandomAccessIterator1,RandomAccessIterator2>(thrust::system::cuda::detail::cross_system<System1,System2>,RandomAccessIterator1,RandomAccessIterator1,RandomAccessIterator2,thrust::detail::true_type)' being compiled
+                 with
+                 [
+                     RandomAccessIterator2=std::_Vector_iterator<std::_Vector_val<int,std::allocator<int>>>,
+                     RandomAccessIterator1=thrust::detail::normal_iterator<thrust::device_ptr<float>>,
+                     System1=thrust::system::cuda::detail::tag,
+                     System2=thrust::system::cpp::detail::tag
+                 ]
+                 C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v6.5\include\thrust/system/cuda/detail/copy_cross_system.inl(244) : see reference to function template instantiation 'RandomAccessIterator2 thrust::system::cuda::detail::copy_cross_system<thrust::system::cuda::detail::tag,thrust::system::cpp::detail::tag,RandomAccessIterator1,RandomAccessIterator2>(thrust::system::cuda::detail::cross_system<System1,System2>,RandomAccessIterator1,RandomAccessIterator1,RandomAccessIterator2,thrust::random_access_traversal_tag,thrust::random_access_traversal_tag,thrust::detail::false_type)' being compiled
+                 with
+                 [
+                     RandomAccessIterator2=std::_Vector_iterator<std::_Vector_val<int,std::allocator<int>>>,
+                     RandomAccessIterator1=thrust::detail::normal_iterator<thrust::device_ptr<float>>,
+                     System1=thrust::system::cuda::detail::tag,
+                     System2=thrust::system::cpp::detail::tag
+                 ]
+                 C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v6.5\include\thrust/system/cuda/detail/copy_cross_system.inl(277) : see reference to function template instantiation 'RandomAccessIterator2 thrust::system::cuda::detail::copy_cross_system<thrust::system::cuda::detail::tag,thrust::system::cpp::detail::tag,InputIterator,OutputIterator>(thrust::system::cuda::detail::cross_system<System1,System2>,RandomAccessIterator1,RandomAccessIterator1,RandomAccessIterator2,thrust::random_access_traversal_tag,thrust::random_access_traversal_tag)' being compiled
+                 with
+                 [
+                     RandomAccessIterator2=std::_Vector_iterator<std::_Vector_val<int,std::allocator<int>>>,
+                     InputIterator=thrust::detail::normal_iterator<thrust::device_ptr<float>>,
+                     OutputIterator=std::_Vector_iterator<std::_Vector_val<int,std::allocator<int>>>,
+                     System1=thrust::system::cuda::detail::tag,
+                     System2=thrust::system::cpp::detail::tag,
+                     RandomAccessIterator1=thrust::detail::normal_iterator<thrust::device_ptr<float>>
+                 ]
+                 C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v6.5\include\thrust/system/cuda/detail/copy.inl(53) : see reference to function template instantiation 'OutputIterator thrust::system::cuda::detail::copy_cross_system<thrust::system::cuda::detail::tag,thrust::system::cpp::detail::tag,InputIterator,OutputIterator>(thrust::system::cuda::detail::cross_system<System1,System2>,InputIterator,InputIterator,OutputIterator)' being compiled
+                 with
+                 [
+                     OutputIterator=std::_Vector_iterator<std::_Vector_val<int,std::allocator<int>>>,
+                     InputIterator=thrust::detail::normal_iterator<thrust::device_ptr<float>>,
+                     System1=thrust::system::cuda::detail::tag,
+                     System2=thrust::system::cpp::detail::tag
+                 ]
+                 C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v6.5\include\thrust/detail/copy.inl(35) : see reference to function template instantiation 'OutputIterator thrust::system::cuda::detail::copy<thrust::system::cuda::detail::tag,thrust::system::cpp::detail::tag,InputIterator,OutputIterator>(thrust::system::cuda::detail::cross_system<System1,System2>,InputIterator,InputIterator,OutputIterator)' being compiled
+                 with
+                 [
+                     OutputIterator=std::_Vector_iterator<std::_Vector_val<int,std::allocator<int>>>,
+                     InputIterator=thrust::detail::normal_iterator<thrust::device_ptr<float>>,
+                     System1=thrust::system::cuda::detail::tag,
+                     System2=thrust::system::cpp::detail::tag
+                 ]
+                 C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v6.5\include\thrust/detail/copy.inl(66) : see reference to function template instantiation 'OutputIterator thrust::copy<DerivedPolicy,InputIterator,OutputIterator>(const thrust::detail::execution_policy_base<DerivedPolicy> &,InputIterator,InputIterator,OutputIterator)' being compiled
+                 with
+                 [
+                     OutputIterator=std::_Vector_iterator<std::_Vector_val<int,std::allocator<int>>>,
+                     DerivedPolicy=thrust::system::cuda::detail::cross_system<thrust::system::cuda::detail::tag,thrust::system::cpp::detail::tag>,
+                     InputIterator=thrust::detail::normal_iterator<thrust::device_ptr<float>>
+                 ]
+                 C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v6.5\include\thrust/detail/copy.inl(102) : see reference to function template instantiation 'OutputIterator thrust::detail::two_system_copy<thrust::system::cuda::detail::tag,thrust::system::cpp::detail::tag,InputIterator,OutputIterator>(thrust::execution_policy<DerivedPolicy> &,thrust::execution_policy<thrust::system::cpp::detail::tag> &,InputIterator,InputIterator,OutputIterator)' being compiled
+                 with
+                 [
+                     OutputIterator=std::_Vector_iterator<std::_Vector_val<int,std::allocator<int>>>,
+                     InputIterator=thrust::detail::normal_iterator<thrust::device_ptr<float>>,
+                     DerivedPolicy=thrust::system::cuda::detail::tag
+                 ]
+                 C:/Users/Samantha/Documents/GitHub/Project2-StreamCompaction/Project2/Samantha Cohen-Project-1-2/stream_compaction.cu(350) : see reference to function template instantiation 'OutputIterator thrust::copy<thrust::detail::normal_iterator<Pointer>,std::_Vector_iterator<_Myvec>>(InputIterator,InputIterator,OutputIterator)' being compiled
+                 with
+                 [
+                     OutputIterator=std::_Vector_iterator<std::_Vector_val<int,std::allocator<int>>>,
+                     Pointer=thrust::device_ptr<float>,
+                     _Myvec=std::_Vector_val<int,std::allocator<int>>,
+                     InputIterator=thrust::detail::normal_iterator<thrust::device_ptr<float>>
+                 ]
        ClCompile:
          All outputs are up-to-date.
        Link:
@@ -54,4 +173,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:03.44
+Time Elapsed 00:00:10.70
