@@ -2,6 +2,10 @@
 #include <stdio.h>
 #include "CPU_stream_compaction.h"
 #include <thrust/device_vector.h>
+#include <thrust/sequence.h>
+#include <thrust/copy.h>
+#include <thrust/count.h>
+#include <thrust/remove.h>
 #define NUM_BANKS 16; 
 #define LOG_NUM_BANKS 4; 
 #define CONFLICT_FREE_OFFSET(n) / ((n) >> NUM_BANKS + (n) >> (2 * LOG_NUM_BANKS));  
@@ -150,6 +154,12 @@ __global__ void prefix_sum_exclusive_naive_kernel(float* in, float* out, int n, 
 } 
 
 void prefix_sum_exclusive_naive(float* in1, float* out1, int width) {
+	cudaEvent_t start, stop; 
+	float time; 
+	cudaEventCreate(&start); 
+	cudaEventCreate(&stop); 
+	cudaEventRecord( start, 0 );
+
 	unsigned int eltNum = 512;
 	int extra_space = 0;
 	const unsigned int threadNum = eltNum / 2;
@@ -174,12 +184,34 @@ void prefix_sum_exclusive_naive(float* in1, float* out1, int width) {
 			}
 		}
 	}
+
+	/*if (width > eltNum) {
+		for (int i = 0; i < width/eltNum + 1; i++) {
+			for (int j = i; j < (i+1)*eltNum; j++) {
+				out[j] = out[j] + out[i*eltNum-1];
+			}
+		}
+	}*/
+
 	cudaMemcpy(out1, out, size, cudaMemcpyDeviceToHost);
 	cudaFree(in);
 	cudaFree(out);
+	
+	cudaEventRecord( stop, 0 ); 
+	cudaEventSynchronize( stop ); 
+	cudaEventElapsedTime( &time, start, stop ); 
+	cudaEventDestroy( start ); 
+	cudaEventDestroy( stop );
+	printf("\nPart 2 Time: %f\n", time);
 }
 
 void prefix_sum_exclusive_one_block(float* in1, float* out1, int width) {
+	cudaEvent_t start, stop; 
+	float time; 
+	cudaEventCreate(&start); 
+	cudaEventCreate(&stop); 
+	cudaEventRecord( start, 0 );
+
 	unsigned int eltNum = 512;
 	int extra_space = 0;
 	const unsigned int threadNum = eltNum / 2;
@@ -201,6 +233,16 @@ void prefix_sum_exclusive_one_block(float* in1, float* out1, int width) {
 	cudaMemcpy(out1, out, size, cudaMemcpyDeviceToHost);
 	cudaFree(in);
 	cudaFree(out);
+	cudaMemcpy(out1, out, size, cudaMemcpyDeviceToHost);
+	cudaFree(in);
+	cudaFree(out);
+
+	cudaEventRecord( stop, 0 ); 
+	cudaEventSynchronize( stop ); 
+	cudaEventElapsedTime( &time, start, stop ); 
+	cudaEventDestroy( start ); 
+	cudaEventDestroy( stop );
+	printf("\nPart 3a Time: %f\n", time);
 }
 
 void prefix_sum_inclusive_one_block(float* in1, float* out1, int width) {
@@ -223,13 +265,17 @@ void prefix_sum_inclusive_one_block(float* in1, float* out1, int width) {
 	prefix_sum_inclusive_one_block_kernel<<<dimGrid, dimBlock, 2 * sharedMemorySize>>>(in, out, eltNum);
 
 	cudaMemcpy(out1, out, size, cudaMemcpyDeviceToHost);
-	/*printf("%f\n",out1[1]);
-	printf("%f\n",out[1]);*/
 	cudaFree(in);
 	cudaFree(out);
 }
 
 void prefix_sum_exclusive_all_lengths(float* in1, float* out1, int width) {
+	cudaEvent_t start, stop; 
+	float time; 
+	cudaEventCreate(&start); 
+	cudaEventCreate(&stop); 
+	cudaEventRecord( start, 0 );
+
 	const unsigned int eltNum = 512;
 	if (width > eltNum) {
 		int extra_space = 0;
@@ -362,6 +408,13 @@ void prefix_sum_exclusive_all_lengths(float* in1, float* out1, int width) {
 	} else {
 			prefix_sum_inclusive_one_block(in1, out1, width);
 	}
+	
+	cudaEventRecord( stop, 0 ); 
+	cudaEventSynchronize( stop ); 
+	cudaEventElapsedTime( &time, start, stop ); 
+	cudaEventDestroy( start ); 
+	cudaEventDestroy( stop );
+	printf("\nPart 3b Time: %f\n", time);
 }
 
 void prefix_sum_exclusive_work_efficient(float* in1, float* out1, int width) {
@@ -397,7 +450,21 @@ __global__ void compact_stream_bool_kernel(float* in, float* out, int n) {
 	}
 } 
 
-void stream_compact(float* in1, float* out1, int width) {
+__global__ void compact_stream_final_kernel(float* in, float* out, int n) {
+	/*if (iarr[i] != curr) {
+			farr[curr] = arr[i-1];
+			curr++;
+			farrIndex++;
+		}*/
+	
+	/*int tx = threadIdx.x;
+	if (in[tx] != curr) {
+			out[curr] = arr[tx-1];
+			curr++;
+	}*/
+} 
+
+void stream_compact_2(float* in1, float* out1, int width) {
 	unsigned int eltNum = 512;
 	int extra_space = 0;
 	const unsigned int threadNum = eltNum / 4;
@@ -417,9 +484,66 @@ void stream_compact(float* in1, float* out1, int width) {
 	compact_stream_bool_kernel<<<dimGrid, dimBlock, 2 * sharedMemorySize>>>(in, out, eltNum);
 	in = out;
 	prefix_sum_exclusive_one_block_kernel<<<dimGrid, dimBlock, 2 * sharedMemorySize>>>(in, out, eltNum);
+	//in = out;
+	//compact_stream_final_kernel<<<dimGrid, dimBlock, 2 * sharedMemorySize>>>(in, out, eltNum);
 	cudaMemcpy(out1, out, size, cudaMemcpyDeviceToHost);
 	cudaFree(in);
 	cudaFree(out);
+}
+
+void stream_compact(float* in1, float* out1, int width) {
+	cudaEvent_t start, stop; 
+	float time; 
+	cudaEventCreate(&start); 
+	cudaEventCreate(&stop); 
+	cudaEventRecord( start, 0 );
+
+	std::vector<float> v;
+	for (int i = 0; i < width; i++) {
+		v.push_back(in1[i]);
+	}
+
+	float* res = new float[width];
+	stream_compact_2(in1,res,width);
+	int curr = 0;
+	for (int i = 0; i < width+1; i++) {
+		if (res[i] != curr) {
+			out1[curr] = v[i-1];
+			curr++;
+		}
+	}
+	cudaEventRecord( stop, 0 ); 
+	cudaEventSynchronize( stop ); 
+	cudaEventElapsedTime( &time, start, stop ); 
+	cudaEventDestroy( start ); 
+	cudaEventDestroy( stop );
+	printf("\nPart 4b Time: %f\n", time);
+}
+
+struct is_zero
+  {
+    __host__ __device__
+    bool operator()(const float x)
+    {
+      return x == 0;
+    }
+  };
+
+void stream_compact_thrust(float* in, float* out, int n) {
+	cudaEvent_t start, stop; 
+	float time; 
+	cudaEventCreate(&start); 
+	cudaEventCreate(&stop); 
+	cudaEventRecord( start, 0 );
+
+	thrust::remove_copy_if(in, in+n, out,is_zero());
+
+	cudaEventRecord( stop, 0 ); 
+	cudaEventSynchronize( stop ); 
+	cudaEventElapsedTime( &time, start, stop ); 
+	cudaEventDestroy( start ); 
+	cudaEventDestroy( stop );
+	printf("\nPart 4c Time: %f\n", time);
 }
 
 int main () {
@@ -433,41 +557,72 @@ int main () {
 	arr[3] = 7.0f;
 	arr[4] = 9.0f;
 	arr[5] = 10.0f;
-	float* in = sc.CPU_prefix_sum_inclusive(arr, 6);
+
+	/*float* in = sc.CPU_prefix_sum_inclusive(arr, 6);
 	printf("Prefix Sum Inclusive:\n");
 	printf("Input Array: \n["); printf("%f ",arr[0]); printf("%f ",arr[1]); printf("%f ",arr[2]); printf("%f ",arr[3]);
 	printf("%f ",arr[4]); printf("%f ",arr[5]); printf("]\n");
 	printf("Output Array: \n["); printf("%f ",in[0]); printf("%f ",in[1]); printf("%f ",in[2]); printf("%f ",in[3]);
-	printf("%f ",in[4]); printf("%f ",in[5]); printf("]\n");
+	printf("%f ",in[4]); printf("%f ",in[5]); printf("]\n");*/
 
+	cudaEvent_t start, stop; 
+	float time; 
+	cudaEventCreate(&start); 
+	cudaEventCreate(&stop); 
+	cudaEventRecord( start, 0 );
+	
 	float* ex = sc.CPU_prefix_sum_exclusive(arr, 6);
+
+	cudaEventRecord( stop, 0 ); 
+	cudaEventSynchronize( stop ); 
+	cudaEventElapsedTime( &time, start, stop ); 
+	cudaEventDestroy( start ); 
+	cudaEventDestroy( stop );
+	printf("\nPart 1 Time: %f\n", time);
+
 	printf("Prefix Sum Exclusive:\n");
 	printf("Input Array: \n["); printf("%f ",arr[0]); printf("%f ",arr[1]); printf("%f ",arr[2]); printf("%f ",arr[3]);
 	printf("%f ",arr[4]); printf("%f ",arr[5]); printf("]\n");
 	printf("Output Array: \n["); printf("%f ",ex[0]); printf("%f ",ex[1]); printf("%f ",ex[2]); printf("%f ",ex[3]);
 	printf("%f ",ex[4]); printf("%f ",ex[5]); printf("]\n");
-
-	//Part 2 - NEED HELP CANNOT IMPLEMENT THIS ALGORITHM
-	printf("\nPart 2\n");
 	
-	float * in1 = new float[6];
+
+	//Part 2
+	printf("\nPart 2\n");
+
+	/*float * in1 = new float[6];
 	in1[0] = 3; in1[1] = 4; in1[2] = 6; in1[3] = 7; in1[4] = 9; in1[5] = 10;
 	float * out1 = new float[6];
-	out1[0] = 0; out1[1] = 0; out1[2] = 0; out1[3] = 0; out1[4] = 0; out1[5] = 0;
+	out1[0] = 0; out1[1] = 0; out1[2] = 0; out1[3] = 0; out1[4] = 0; out1[5] = 0;*/
+
+	float* in1 = new float[600];
+	float* out1 = new float[600];
+	for (int i = 0; i < 600; i++) {
+		in1[i] = 1;
+		out1[i] = 0;
+	}
 
 	int size = 1*6*sizeof(float);
 	int numBlocks = 1;
 	dim3 threadsPerBlock(1,1);
 
-	prefix_sum_exclusive_naive(in1,out1,6);
+	prefix_sum_exclusive_naive(in1,out1,600);
 
 	printf("GPU Prefix Sum Exclusive Naive:\n");
 	printf("Input Array:\n[");
-	printf("%f ",in1[0]); printf("%f ",in1[1]); printf("%f ",in1[2]); printf("%f ",in1[3]); printf("%f ",in1[4]); printf("\n");
-	printf("%f ",in1[5]); printf("]\n");
+	for (int i = 0; i < 600; i++) {
+		printf("%f ",in1[i]); 
+	}
+	printf("]\n");
+	printf("\n");
+	/*printf("%f ",in1[0]); printf("%f ",in1[1]); printf("%f ",in1[2]); printf("%f ",in1[3]); printf("%f ",in1[4]); printf("\n");
+	printf("%f ",in1[5]); printf("]\n");*/
 	printf("Output Array:\n[");
-	printf("%f ",out1[0]); printf("%f ",out1[1]); printf("%f ",out1[2]); printf("%f ",out1[3]); printf("%f ",out1[4]); printf("\n");
-	printf("%f ",out1[5]); printf("]\n");
+	for (int i = 0; i < 600; i++) {
+		printf("%f ",out1[i]); 
+	}//printf("%f ",out1[1]); printf("%f ",out1[2]); printf("%f ",out1[3]); printf("%f ",out1[4]); printf("\n");
+	//printf("%f ",out1[5]); 
+	printf("]\n");
 	printf("\n");
 
 	//Part 3
@@ -501,16 +656,12 @@ int main () {
 	int size2 = 550;
 	float * in2 = new float[size2];
 	float * out2 = new float[size2];//CUDAMALLOC YOUR ARRAYS
-	//in2 = (float*) malloc(size);
-	//out2 = (float*) malloc(size);
 	for (int i = 0; i < size2; i++) {
 		in2[i] = 1;
 		out2[i] = 0;
 	}
 
 	//prefix_sum_exclusive_all_lengths(in2,out2,size2);
-	//free(in2);
-	//free(out2);
 	printf("GPU Prefix Sum Exclusive All Lengths:\n");
 	/*printf("Input Array:\n[");
 	for (int i = 0; i < size2; i++) {
@@ -537,7 +688,23 @@ int main () {
 	arr2[6] = 7.0f;
 	arr2[7] = 9.0f;
 	arr2[8] = 10.0f;
+
+	cudaEvent_t start1, stop1; 
+	float time1; 
+	cudaEventCreate(&start1); 
+	cudaEventCreate(&stop1); 
+	cudaEventRecord( start1, 0 );
+
 	float* exx = sc.CPU_prefix_sum_exclusive(arr2, 9);
+
+	printf("\nPart 4a Time: %f\n", time);
+
+	cudaEventRecord( stop1, 0 ); 
+	cudaEventSynchronize( stop1 ); 
+	cudaEventElapsedTime( &time1, start1, stop1 ); 
+	cudaEventDestroy( start1 ); 
+	cudaEventDestroy( stop1 );
+
 	printf("Input Array:\n[");
 	for (int i = 0; i < 9; i++) {
 		printf("%f ",arr2[i]);
@@ -551,8 +718,8 @@ int main () {
 
 	//GPU Scatter No Thrust
 	printf("GPU Scatter:\n");
-	exx = new float[9];
-	stream_compact(arr2,exx,9);
+	float* exx2 = new float[6];
+	stream_compact(arr2,exx2,9);
 
 	printf("Input Array:\n[");
 	for (int i = 0; i < 9; i++) {
@@ -560,8 +727,34 @@ int main () {
 	}
 	printf("]\n");
 	printf("Output Array:\n[");
+	for (int i = 0; i < 6; i++) {
+		printf("%f ",exx2[i]);
+	}
+	printf("]\n");
+
+	//GPU Scatter Thrust
+	arr2[0] = 3.0f;
+	arr2[1] = 0.0f;
+	arr2[2] = 4.0f;
+	arr2[3] = 0.0f;
+	arr2[4] = 0.0f;
+	arr2[5] = 6.0f;
+	arr2[6] = 7.0f;
+	arr2[7] = 9.0f;
+	arr2[8] = 10.0f;
+
+	printf("GPU Scatter Thrust:\n");
+	float* exx3 = new float[6];
+	stream_compact_thrust(arr2,exx3,9);
+
+	printf("Input Array:\n[");
 	for (int i = 0; i < 9; i++) {
-		printf("%f ",exx[i]);
+		printf("%f ",arr2[i]);
+	}
+	printf("]\n");
+	printf("Output Array:\n[");
+	for (int i = 0; i < 6; i++) {
+		printf("%f ",exx3[i]);
 	}
 	printf("]\n");
 	
